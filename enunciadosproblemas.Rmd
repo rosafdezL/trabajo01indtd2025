@@ -1,0 +1,42 @@
+---
+title: "Enunciados problemas métodos de incertidumbre"
+author: "Rosa Fernández López"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+  pdf_document:
+    toc: true
+    toc_depth: 5
+lang: es
+---
+
+**Problema 1**
+
+Aplicar los criterios de decisión bajo incertidumbre (tanto en situación favorable
+como desfavorable) a los problemas cuya matriz de valores numéricos viene dada en la tabla siguiente:
+
+|  | e1 | e2 | e3 |
+|:------|:----:|:----:|:----:|
+| **d1**| 12 | 8  | 5  |
+| **d2**| 10 | 11 | 4  |
+| **d3**| 7  | 13 | 6  |
+
+
+**Problema 2. Elección de tarifa eléctrica para un nuevo piso**
+
+Carlos se ha mudado recientemente a un nuevo piso y necesita contratar una tarifa de electricidad. Tras comparar varias compañías, ha identificado tres opciones con condiciones distintas:
+
+- ElectroPlus ofrece una tarifa fija de 45€ al mes, independientemente del consumo eléctrico.
+
+- LuzFlex aplica una tarifa variable de 0,20€/kWh, con una cuota base mensual de 15€.
+
+- EcoVolt propone una tarifa variable de 0,15€/kWh sin cuota fija, pero incluye una penalización de 10€ si el consumo mensual supera los 300kWh.
+
+Carlos no tiene certeza sobre su consumo mensual, pero considera dos escenarios posibles durante el primer año:
+
+- Consumo moderado: 250kWh al mes.
+
+- Consumo elevado: 350kWh al mes.
+
+Determinar cuál sería la mejor opción para Carlos según cada criterio.
