@@ -1,0 +1,254 @@
+---
+title: "Soluciones problemas métodos de incertidumbre"
+author: "Rosa Fernández López"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+  pdf_document:
+    toc: true
+    toc_depth: 5
+lang: es
+---
+
+**Problema 1**
+
+Aplicar los criterios de decisión bajo incertidumbre (tanto en situación favorable
+como desfavorable) a los problemas cuya matriz de valores numéricos viene dada en la tabla siguiente:
+
+|  | e1 | e2 | e3 |
+|:------|:----:|:----:|:----:|
+| **d1**| 12 | 8  | 5  |
+| **d2**| 10 | 11 | 4  |
+| **d3**| 7  | 13 | 6  |
+
+**Solución:**
+
+```{r}
+source("teoriadecision_funciones_incertidumbre.R")
+```
+
+Matriz de datos
+```{r}
+m1 <- crea.tablaX(c(12, 8, 5,
+               10, 11, 4,
+               7, 13, 6),
+             numalternativas = 3, numestados = 3)
+rownames(m1) <- c("d1", "d2", "d3")
+colnames(m1) <- c("e1", "e2", "e3")
+m1
+```
+
+
+Aplicar criterios en situaciones favorables
+```{r}
+# Criterio de Wald (pesimista)
+sol_W <- criterio.Wald(m1, favorable = TRUE)
+cat("La decisión óptima en el Criterio de Wald (pesimista) es: ",
+    sol_W$AlternativaOptima)
+
+# Criterio Optimista (Maximax)
+sol_O <- criterio.Optimista(m1, favorable = TRUE)
+cat("La decisión óptima en el Criterio Optimista (Maximax) es: ",
+    sol_O$AlternativaOptima)
+
+# Criterio de Hurwicz
+sol_H <- criterio.Hurwicz(m1, favorable = TRUE, alfa = 0.5)
+cat("La decisión óptima en el Criterio de Hurwicz es: ",
+    sol_H$AlternativaOptima)
+
+# Criterio de Savage (Minimax)
+sol_S <- criterio.Savage(m1, favorable = TRUE)
+cat("La decisión óptima en el Criterio de Savage (Minimax) es: ",
+    sol_S$AlternativaOptima)
+
+# Criterio de Laplace
+sol_L <- criterio.Laplace(m1, favorable = TRUE)
+cat("La decisión óptima en el Criterio de Laplace es: ",
+    sol_L$AlternativaOptima)
+
+# Criterio de Punto Ideal
+sol_PI <- criterio.PuntoIdeal(m1, favorable = TRUE)
+cat("La decisión óptima en el Criterio de Punto Ideal es: ",
+    sol_PI$AlternativaOptima)
+
+# Todos los criterios juntos
+sol_T <- criterio.Todos(m1, favorable = TRUE, alfa = 0.5)
+library(tinytable)
+tt(sol_T, rownames = TRUE)
+
+```
+
+
+Resultados en situación favorable
+```{r}
+dibuja.criterio.Hurwicz(m1, favorable = TRUE)
+```
+
+```{r}
+# Extraer la fila "iAlt.Opt" de la tabla
+optimas <- sol_T["iAlt.Opt", ]
+
+# Contar cuántas veces aparece cada alternativa
+conteo <- table(as.character(optimas))
+
+# Identificar la más frecuente
+mayoria <- names(which.max(conteo))
+
+# Mostrar el resultado
+cat("Según la mayoría de criterios en situación favorable, la alternativa óptima es:", mayoria, "\n")
+
+
+```
+
+Aplicar criterios en situación desfavorable
+```{r}
+# Criterio de Wald (pesimista)
+sol_W_d <- criterio.Wald(m1, favorable = FALSE)
+cat("La decisión óptima en el Criterio de Wald (pesimista) es: ",
+    sol_W_d$AlternativaOptima)
+
+# Criterio Optimista
+sol_O_d <- criterio.Optimista(m1, favorable = FALSE)
+cat("La decisión óptima en el Criterio Optimista es: ",
+    sol_O_d$AlternativaOptima)
+
+# Criterio de Hurwicz
+sol_H_d <- criterio.Hurwicz(m1, favorable = FALSE, alfa = 0.5)
+cat("La decisión óptima en el Criterio de Hurwicz es: ",
+    sol_H_d$AlternativaOptima)
+
+# Criterio de Savage
+sol_S_d <- criterio.Savage(m1, favorable = FALSE)
+cat("La decisión óptima en el Criterio de Savage es: ",
+    sol_S_d$AlternativaOptima)
+
+# Criterio de Laplace
+sol_L_d <- criterio.Laplace(m1, favorable = FALSE)
+cat("La decisión óptima en el Criterio de Laplace es: ",
+    sol_L_d$AlternativaOptima)
+
+# Criterio de Punto Ideal
+sol_PI_d <- criterio.PuntoIdeal(m1, favorable = FALSE)
+cat("La decisión óptima en el Criterio de Punto Ideal es: ",
+    sol_PI_d$AlternativaOptima)
+
+# Todos los criterios juntos
+sol_T_d <- criterio.Todos(m1, favorable = FALSE, alfa = 0.5)
+library(tinytable)
+tt(sol_T_d, rownames = TRUE)
+
+```
+
+
+Resultados en situación desfavorable
+```{r}
+dibuja.criterio.Hurwicz(m1, favorable = FALSE)
+```
+```{r}
+
+# Extraer la fila "iAlt.Opt (Desfav.)" de la tabla
+optimasdesf <- sol_T_d["iAlt.Opt (Desfav.)", ]
+
+# Contar cuántas veces aparece cada alternativa
+conteodesf <- table(as.character(optimasdesf))
+
+# Identificar la más frecuente
+mayoriadesf <- names(which.max(conteodesf))
+
+# Mostrar el resultado
+cat("Según la mayoría de criterios en situación favorable, la alternativa óptima es:", mayoriadesf, "\n")
+
+
+```
+
+**Problema 2. Elección de tarifa eléctrica para un nuevo piso**
+
+Carlos se ha mudado recientemente a un nuevo piso y necesita contratar una tarifa de electricidad. Tras comparar varias compañías, ha identificado tres opciones con condiciones distintas:
+
+- ElectroPlus ofrece una tarifa fija de 45€ al mes, independientemente del consumo eléctrico.
+
+- LuzFlex aplica una tarifa variable de 0,20€/kWh, con una cuota base mensual de 15€.
+
+- EcoVolt propone una tarifa variable de 0,15€/kWh sin cuota fija, pero incluye una penalización de 10€ si el consumo mensual supera los 300kWh.
+
+Carlos no tiene certeza sobre su consumo mensual, pero considera dos escenarios posibles durante el primer año:
+
+- Consumo moderado: 250kWh al mes.
+
+- Consumo elevado: 350kWh al mes.
+
+Determinar cuál sería la mejor opción para Carlos según cada criterio.
+
+```{r}
+source("teoriadecision_funciones_incertidumbre.R")
+```
+
+Cálculo de costes anuales por alternativa y escenario
+
+```{r}
+# ElectroPlus: tarifa fija
+electroplus_moderado <- 45 * 12
+electroplus_elevado  <- 45 * 12
+
+# LuzFlex: tarifa variable + cuota fija
+luzflex_moderado <- (250 * 0.20 + 15) * 12
+luzflex_elevado  <- (350 * 0.20 + 15) * 12
+
+# EcoVolt: tarifa variable + penalización si > 300kWh
+ecovolt_moderado <- 250 * 0.15 * 12
+ecovolt_elevado  <- (350 * 0.15 + 10) * 12
+```
+
+Crear la matriz de costes
+
+```{r}
+m_carlos <- crea.tablaX(c(electroplus_moderado, electroplus_elevado,
+                          luzflex_moderado, luzflex_elevado,
+                          ecovolt_moderado, ecovolt_elevado),
+                        numalternativas = 3,
+                        numestados = 2)
+
+rownames(m_carlos) <- c("ElectroPlus", "LuzFlex", "EcoVolt")
+colnames(m_carlos) <- c("Consumo moderado", "Consumo elevado")
+m_carlos
+
+```
+
+Aplicar criterios en situación desfavorable (costes)
+
+```{r}
+
+sol_carlos <- criterio.Todos(m_carlos, favorable = FALSE, alfa = 0.5)
+
+# Mostrar tabla de resultados
+library(tinytable)
+tt(sol_carlos, rownames = TRUE)
+
+```
+
+Resultados en situación desfavorable
+
+```{r}
+# Extraer la fila de alternativas óptimas
+optimas <- sol_carlos["iAlt.Opt", ]
+mayoria <- names(which.max(table(as.character(optimas))))
+
+cat("Según la mayoría de criterios, la mejor tarifa para Carlos sería:", mayoria, "\n")
+```
+
+```{r}
+dibuja.criterio.Hurwicz(m_carlos, favorable = FALSE)
+
+```
+
+
+Observando el gráfico, vemos que:
+
+ - ElectroPlus (línea roja) mantiene un coste constante para cualquier valor de alpha.
+
+ - LuzFlex (línea verde) tiene un coste intermedio, que disminuye ligeramente al aumentar alpha.
+
+ - EcoVolt (línea azul) es la más sensible al valor de alpha: si alpha es bajo (más pesimista), su coste es alto; si alpha es alto (más optimista), su coste baja considerablemente.
+
+ Esto indica que EcoVolt solo sería recomendable si Carlos adopta una actitud muy optimista respecto al consumo.
