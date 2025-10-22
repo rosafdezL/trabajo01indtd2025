@@ -2,11 +2,11 @@
 title: "Soluciones problemas métodos de incertidumbre"
 author: "Rosa Fernández López"
 date: "`r Sys.Date()`"
-output:
-  pdf_document:
+format:
+  typst:
     toc: true
-    toc_depth: 5
-  html_document:
+    toc-depth: 5
+  html:
     toc: true
 lang: es
 ---
