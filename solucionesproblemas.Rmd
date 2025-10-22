@@ -243,6 +243,7 @@ cat("Según la mayoría de criterios, la mejor tarifa para Carlos sería:", mayo
 
 ```{r}
 dibuja.criterio.Hurwicz(m_carlos, favorable = FALSE)
+dibuja.criterio.Hurwicz_Intervalos(m_carlos, favorable = FALSE)
 
 ```
 
@@ -258,4 +259,6 @@ Observando el gráfico, vemos que:
  - EcoVolt (línea azul) es la más sensible al valor de alpha: si alpha es bajo (más pesimista), su coste es alto; si alpha es alto (más optimista), su coste baja considerablemente.
 
  Esto indica que EcoVolt solo sería recomendable si Carlos adopta una actitud muy optimista respecto al consumo.
+
+El punto de corte entre las alternativas ElectroPlus y EcoVolt es 0.7
 :::
